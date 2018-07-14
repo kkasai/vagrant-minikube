@@ -1,0 +1,64 @@
+---
+# - name: set hostname
+#   hostname: 
+#     name: "{{ hostname }}"
+
+# - name: hosts file
+#   copy:
+#     src: hosts
+#     dest: /etc/hosts
+
+# - name: install vim
+#   yum:
+#     name: vim
+
+- name: install packages for docker
+  yum:
+    name: "{{ item }}"
+  with_items:
+    - device-mapper-persistent-data
+    - lvm2
+
+- name: download repository file
+  get_url:
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+
+- name: install docker
+  yum:
+    name: docker-ce
+
+- name: create kubernetes repository file
+  copy:
+    src: kubernetes.repo
+    dest: /etc/yum.repos.d/kubernetes.repo
+
+# - name: create kubernetes repository file
+#   yum_repository:
+#     name: kubernetes
+#     description: kubernetes repo
+#     baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+#     enabled: yes
+#     gpgcheck: yes
+#     repo_gpgcheck: yes
+#     gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+
+- name: install kubectl
+  yum:
+    name: "{{ item }}"
+  with_items:
+    - kubectl
+    # - kubelet
+    # - kubeadm
+
+- name: start docker
+  systemd: 
+    name: docker
+    state: started
+    enabled: yes
+
+- name: download minikube
+  get_url:
+    url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    dest: /usr/local/bin/minikube
+    mode: 0755
