@@ -1,0 +1,3 @@
+---
+docker_version: 18.06.1.ce
+minikube_version: v0.30.0
