@@ -12,5 +12,19 @@ mkdir -p $HOME/.kube
 touch $HOME/.kube/config
 
 export KUBECONFIG=$HOME/.kube/config
+sudo -E /usr/local/bin/minikube start --vm-driver=none --extra-config=kubeadm.ignore-preflight-errors=NumCPU
+```
+
+or  
+Vagrantfile:
+
+```
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "2048"
++   vb.cpus = "2"
+  end
+```
+
+```
 sudo -E /usr/local/bin/minikube start --vm-driver=none
 ```
